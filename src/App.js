@@ -24,6 +24,7 @@ class App extends Component {
 
             isDisplayForm: false,
             taskSelected: '',
+            formTitle: 'Thêm công việc'
         }
     }
 
@@ -32,9 +33,10 @@ class App extends Component {
      *
      * @memberof App
      */
-    handleToggleForm = () => {
+    handleCloseForm = () => {
         this.setState({
-            isDisplayForm: false
+            isDisplayForm: false,
+            taskSelected: null,
         })
     }
 
@@ -56,22 +58,10 @@ class App extends Component {
     }
 
     /**
-     * Render form element with condition
+     * Update status when clicked
      *
      * @memberof App
      */
-    getFormElement = () => {
-        return (
-            <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                <TaskForm 
-                    handleCloseForm={this.handleToggleForm}
-                    addNewTask={ahihi => this.addNewTask(ahihi)}
-                    taskSelected={this.state.taskSelected}
-                />
-            </div>
-        )
-    }
-
     changeStatus = idx => {
         let listTask = this.state.tasks;
         listTask[idx].status = !listTask[idx].status;
@@ -80,6 +70,11 @@ class App extends Component {
         });
     }
 
+    /**
+     * Delete task
+     *
+     * @memberof App
+     */
     deleteTask = idx => {
         let listTask = this.state.tasks;
         listTask.splice(idx, 1);
@@ -88,11 +83,35 @@ class App extends Component {
         }); 
     }
 
-    updateTask = taskSelected => {
+    /**
+     * Open form and fill data to edit
+     *
+     * @memberof App
+     */
+    editTask = taskSelected => {
         this.setState({
             isDisplayForm: true,
-            taskSelected: taskSelected
+            taskSelected: taskSelected,
+            formTitle: 'Cập nhật công việc'
         })
+    }
+
+    /**
+     * Update task
+     *
+     * @memberof App
+     */
+    updateTask = taskUpdated => {
+        let listTask = this.state.tasks;
+        let taskUpdateIdx = listTask.findIndex((item) => {
+            return item.id === taskUpdated.id;
+        });
+
+        listTask[taskUpdateIdx] = taskUpdated;
+        this.setState({
+            tasks: listTask,
+            taskSelected: '',
+        });
     }
 
     /**
@@ -100,10 +119,37 @@ class App extends Component {
      *
      * @memberof App
      */
-    handleOpenForm = () => {
-        this.setState({
-            isDisplayForm: !this.state.isDisplayForm
-        })
+    handleToggleForm = () => {
+        if (this.state.isDisplayForm && this.state.taskSelected) {
+            this.setState({
+                isDisplayForm: true,
+                taskSelected: null,
+                formTitle: 'Thêm công việc'
+            })
+        } else {
+            this.setState({
+                isDisplayForm: !this.state.isDisplayForm
+            })
+        }
+    }
+
+    /**
+     * Render form element with condition
+     *
+     * @memberof App
+     */
+    getFormElement = () => {
+        return (
+            <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <TaskForm 
+                    formTitle={this.state.formTitle}
+                    handleCloseForm={this.handleCloseForm}
+                    addNewTask={ahihi => this.addNewTask(ahihi)}
+                    taskSelected={this.state.taskSelected}
+                    updateTask={this.updateTask}
+                />
+            </div>
+        )
     }
 
     /**
@@ -126,15 +172,15 @@ class App extends Component {
                     <div className="row">
                         {formElm}
                         <div className={ isDisplayForm ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8' : 'col-xs-12 col-sm-12 col-md-12 col-lg-12' } >
-                            <button type="button" className="btn btn-primary" onClick={this.handleOpenForm}>
-                                <span className="fa fa-plus mr-5"></span>Thêm Công Việc
+                            <button type="button" className="btn btn-primary" onClick={this.handleToggleForm}>
+                                <span className="fa fa-plus mr-5"></span>Thêm công việc
                             </button>
                             <Control />
                             <TaskList
                                 tasks={tasks}
                                 changeStatus={this.changeStatus}
                                 deleteTask={this.deleteTask}
-                                updateTask={this.updateTask}
+                                editTask={this.editTask}
                                 />
                         </div>
                     </div>

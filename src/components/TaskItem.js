@@ -1,18 +1,33 @@
 import React, { Component } from 'react';
 
 class TaskItem extends Component {
+    
+    /**
+     * @inheritance
+     * 
+     * @memberof TaskList
+     */
     changeStatus = (idx) => {
         this.props.changeStatus(idx);
     }
 
+    /**
+     * @inheritance
+     *
+     * @memberof TaskList
+     */
     deleteTask = idx => {
         this.props.deleteTask(idx);
     }
 
-    updateTask = taskSelected => {
-        this.props.updateTask(taskSelected);
+    /**
+     * @inheritance
+     *
+     * @memberof TaskList
+     */
+    editTask = taskSelected => {
+        this.props.editTask(taskSelected);
     }
-
 
     render() {
         let { taskValue, idx } = this.props;
@@ -31,7 +46,7 @@ class TaskItem extends Component {
                     </span>
                 </td>
                 <td className="text-center">
-                    <button type="button" className="btn btn-warning btn-sm" onClick={() => this.updateTask(taskValue)} >
+                    <button type="button" className="btn btn-warning btn-sm" onClick={() => this.editTask(taskValue)} >
                         <span className="fa fa-edit mr-5"></span>
                     </button>&nbsp;
                     <button type="button" className="btn btn-danger btn-sm" onClick={() => this.deleteTask(idx)} >

@@ -3,22 +3,25 @@ import React, { Component } from 'react';
 class TaskForm extends Component {
     /**
      * Creates an instance of TaskForm.
+     * 
      * @param {*} props
-     * @memberof TaskForm
+     * 
+     * @memberof App
      */
     constructor(props) {
         super(props);
         
         this.state = {
             taskName: '',
-            taskStatus: 1
+            taskStatus: 1,
+            taskId: null,
         }
     }
 
     /**
      * Handle input change
      *
-     * @memberof TaskForm
+     * @memberof App
      */
     handleOnChangeValue = (e) => {
         let { name, value } = e.target;
@@ -31,11 +34,11 @@ class TaskForm extends Component {
     /**
      * Handle submit form
      *
-     * @memberof TaskForm
+     * @memberof App
      */
     handeFormSubmit = (e) => {
         if (!this.state.taskName.trim()) {
-            e.preventDefault(); // disable submit form
+            e.preventDefault();
         }
 
         if (this.state.taskName.trim()) {
@@ -43,16 +46,21 @@ class TaskForm extends Component {
                 name: this.state.taskName.trim(),
                 status: parseInt(this.state.taskStatus) ? true : false
             }
-    
-            this.props.addNewTask(newTask);
+
+            // if has id on state, we update this task with id
+            if (this.state.taskId) {
+                e.preventDefault();
+
+                newTask.id = this.state.taskId;
+                this.props.updateTask(newTask);
+            } else {
+                this.props.addNewTask(newTask);
+            }
+
             this.resetForm();
         }
 
-        e.preventDefault(); // disable submit form
-    }
-
-    handleUpdateTask = () => {
-
+        e.preventDefault();
     }
 
     /**
@@ -63,7 +71,8 @@ class TaskForm extends Component {
     resetForm = () => {
         this.setState({
             taskName: '',
-            taskStatus: 1
+            taskStatus: 1,
+            taskId: null,
         });
 
         this.handleCloseForm();
@@ -78,22 +87,48 @@ class TaskForm extends Component {
         this.props.handleCloseForm();
     }
 
+    /**
+     * Fill data to edit
+     *
+     * @memberof TaskForm
+     */
     setTaskToUpdate = () => {
         if (this.props.taskSelected) {
             this.setState({
+                taskId: this.props.taskSelected.id,
                 taskName: this.props.taskSelected.name,
-                taskStatus: this.props.taskSelected.status ? 1 : 0
+                taskStatus: this.props.taskSelected.status ? 1 : 0,
             })
         }
     }
 
-    componentWillUpdate(nextProps, nextState) {
+    /**
+     * When receive prop, fill data
+     *
+     * @param {*} nextProps
+     * @memberof TaskForm
+     */
+    componentWillReceiveProps(nextProps) {
         if (nextProps.taskSelected) {
-            nextState.taskName = nextProps.taskSelected.name;
-            nextState.taskStatus = nextProps.taskSelected.status ? 1 : 0;
+            this.setState({
+                taskId: nextProps.taskSelected.id,
+                taskName: nextProps.taskSelected.name,
+                taskStatus: nextProps.taskSelected.status ? 1 : 0,
+            })
+        } else {
+            this.setState({
+                taskId: null,
+                taskName: '',
+                taskStatus: 1,
+            })
         }
     }
-    
+
+    /**
+     * Fill data to edit
+     *
+     * @memberof TaskForm
+     */
     componentWillMount() {
         this.setTaskToUpdate();
     }
@@ -107,7 +142,7 @@ class TaskForm extends Component {
         return (
             <div className="panel panel-warning">
                 <div className="panel-heading">
-                    <h3 className="panel-title">Thêm Công Việc<span className="fa fa-times-circle text-right" onClick={this.handleCloseForm}/></h3>
+                    <h3 className="panel-title">{this.props.formTitle}<span className="fa fa-times-circle text-right" onClick={this.handleCloseForm}/></h3>
                 </div>
                 <div className="panel-body">
                     <form onSubmit={e => this.handeFormSubmit(e)}>
