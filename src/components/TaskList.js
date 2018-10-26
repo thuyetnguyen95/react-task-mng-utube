@@ -3,16 +3,31 @@ import TaskItem from "./TaskItem";
 
 class TaskList extends Component {
 
+     /**
+     * Update status when clicked
+     * 
+     * @memberof App
+     */
     changeStatus = idx => {
         this.props.changeStatus(idx);
     }
 
+    /**
+     * Delete task
+     * 
+     * @memberof App
+     */
     deleteTask = idx => {
         this.props.deleteTask(idx);
     }
 
-    updateTask = taskSelected => {
-        this.props.updateTask(taskSelected);
+    /**
+     * Edit task
+     * 
+     * @memberof App
+     */
+    editTask = taskSelected => {
+        this.props.editTask(taskSelected);
     }
 
     render() {
@@ -23,7 +38,7 @@ class TaskList extends Component {
                         taskValue={item}
                         changeStatus={this.changeStatus}
                         deleteTask={this.deleteTask}
-                        updateTask={this.updateTask}
+                        editTask={this.editTask}
                     />;
         });
 
