@@ -11,9 +11,15 @@ class TaskList extends Component {
             taskList: null,
         }
 
-        this.handleFilter = this.handleFilter.bind(this);
+        this.handleFilter = this.handleFilter.bind(this); // Just I like!
     }
     
+    /**
+     * Handle filter
+     *
+     * @param {*} event
+     * @memberof TaskList
+     */
     handleFilter(event) {
         let { name, value } = event.target;
 

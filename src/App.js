@@ -4,6 +4,10 @@ import TaskForm from "./components/TaskForm";
 import Control from './components/Control';
 import TaskList from './components/TaskList';
 
+/**
+ * This project is simple react task manager from a youtube tutorial
+ * so if you have any questions or discussions pls contact me!
+ */
 class App extends Component {
     /**
      * Creates an instance of App.
@@ -156,6 +160,11 @@ class App extends Component {
         )
     }
 
+    /**
+     * Catch filter action and update state
+     *
+     * @memberof App
+     */
     filter = (name, status) => {
         this.setState({
             filterName: name,
@@ -163,6 +172,11 @@ class App extends Component {
         })
     }
 
+    /**
+     * Filter name, status
+     *
+     * @memberof App
+     */
     tasksHasFilter = () => {
         let tasksFiltered = this.state.tasks;
         if (this.state.filterName) {
