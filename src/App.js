@@ -4,6 +4,12 @@ import TaskForm from "./components/TaskForm";
 import Control from './components/Control';
 import TaskList from './components/TaskList';
 
+/**
+ * This project is simple react task manager from a youtube tutorial
+ * so if you have any questions or discussions pls contact me!
+ * 
+ * p/s: don't trust this code!
+ */
 class App extends Component {
     /**
      * Creates an instance of App.
@@ -24,6 +30,8 @@ class App extends Component {
 
             isDisplayForm: false,
             taskSelected: '',
+            filterName: '',
+            filterStatus: -1,
             formTitle: 'Thêm công việc'
         }
     }
@@ -77,10 +85,12 @@ class App extends Component {
      */
     deleteTask = idx => {
         let listTask = this.state.tasks;
+
         listTask.splice(idx, 1);
+
         this.setState({
             tasks: listTask
-        }); 
+        });
     }
 
     /**
@@ -141,7 +151,7 @@ class App extends Component {
     getFormElement = () => {
         return (
             <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                <TaskForm 
+                <TaskForm
                     formTitle={this.state.formTitle}
                     handleCloseForm={this.handleCloseForm}
                     addNewTask={ahihi => this.addNewTask(ahihi)}
@@ -153,13 +163,50 @@ class App extends Component {
     }
 
     /**
+     * Catch filter action and update state
+     *
+     * @memberof App
+     */
+    filter = (name, status) => {
+        this.setState({
+            filterName: name,
+            filterStatus: status
+        })
+    }
+
+    /**
+     * Filter name, status
+     *
+     * @memberof App
+     */
+    tasksHasFilter = () => {
+        let tasksFiltered = this.state.tasks;
+        if (this.state.filterName) {
+            tasksFiltered = tasksFiltered.filter(item => {
+                return item.name.toLowerCase().indexOf(this.state.filterName) !== -1;
+            });
+        }
+
+        if (this.state.filterStatus === 0) {
+            tasksFiltered = tasksFiltered.filter(item => item.status);
+        }
+
+        if (this.state.filterStatus === 1) {
+            tasksFiltered = tasksFiltered.filter(item => !item.status);
+        }
+
+        return tasksFiltered;
+    }
+
+    /**
      * Render all component
      *
      * @returns
      * @memberof App
      */
-  render() {
-        let { tasks, isDisplayForm } = this.state;
+    render() {
+        let { isDisplayForm } = this.state;
+        let tasks = this.tasksHasFilter();
         let formElm = isDisplayForm ? this.getFormElement() : null;
 
         return (
@@ -171,7 +218,7 @@ class App extends Component {
                     </div>
                     <div className="row">
                         {formElm}
-                        <div className={ isDisplayForm ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8' : 'col-xs-12 col-sm-12 col-md-12 col-lg-12' } >
+                        <div className={isDisplayForm ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8' : 'col-xs-12 col-sm-12 col-md-12 col-lg-12'} >
                             <button type="button" className="btn btn-primary" onClick={this.handleToggleForm}>
                                 <span className="fa fa-plus mr-5"></span>Thêm công việc
                             </button>
@@ -181,7 +228,8 @@ class App extends Component {
                                 changeStatus={this.changeStatus}
                                 deleteTask={this.deleteTask}
                                 editTask={this.editTask}
-                                />
+                                filter={this.filter}
+                            />
                         </div>
                     </div>
                 </div>
