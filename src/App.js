@@ -7,6 +7,8 @@ import TaskList from './components/TaskList';
 /**
  * This project is simple react task manager from a youtube tutorial
  * so if you have any questions or discussions pls contact me!
+ * 
+ * p/s: don't trust this code!
  */
 class App extends Component {
     /**
