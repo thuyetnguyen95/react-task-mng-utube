@@ -2,6 +2,30 @@ import React, { Component } from 'react';
 import TaskItem from "./TaskItem";
 
 class TaskList extends Component {
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            filterName: '',
+            filterStatus: -1,
+            taskList: null,
+        }
+
+        this.handleFilter = this.handleFilter.bind(this);
+    }
+    
+    handleFilter(event) {
+        let { name, value } = event.target;
+
+        this.setState({
+            [name] : value
+        }, () => {
+            this.props.filter(
+                this.state.filterName.toLocaleLowerCase(),
+                parseInt(this.state.filterStatus)
+            );
+        });
+    }
 
      /**
      * Update status when clicked
@@ -57,12 +81,12 @@ class TaskList extends Component {
                         <tbody>
                             <tr>
                                 <td></td>
-                                <td><input type="text" className="form-control" name="filterName" /></td>
+                                <td><input type="text" className="form-control" name="filterName" onChange={this.handleFilter} /></td>
                                 <td>
-                                    <select className="form-control" name="filterStatus">
+                                    <select className="form-control" name="filterStatus" onChange={this.handleFilter}>
                                         <option value="-1">Tất Cả</option>
-                                        <option value="0">Ẩn</option>
-                                        <option value="1">Kích Hoạt</option>
+                                        <option value="0">Hoạt động</option>
+                                        <option value="1">Hoàn thành</option>
                                     </select>
                                 </td>
                                 <td></td>
