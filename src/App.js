@@ -21,17 +21,19 @@ class App extends Component {
         super(props);
         this.state = {
             tasks: [
-                { id: 1, name: 'Ăn', status: true },
-                { id: 2, name: 'Ngủ', status: false },
+                { id: 1, name: 'Eat', status: true },
+                { id: 2, name: 'Sleep', status: false },
                 { id: 3, name: 'Code', status: true },
-                { id: 4, name: 'Hít thở', status: true },
-                { id: 5, name: 'LOL', status: false },
+                { id: 4, name: 'Breath', status: true },
+                { id: 5, name: 'Play game', status: false },
             ],
 
             isDisplayForm: false,
             taskSelected: '',
             filterName: '',
             filterStatus: -1,
+            searchKeyWord: '',
+            sortType: null,
             formTitle: 'Thêm công việc'
         }
     }
@@ -144,22 +146,86 @@ class App extends Component {
     }
 
     /**
-     * Render form element with condition
+     * Handle search tasks name
      *
      * @memberof App
      */
-    getFormElement = () => {
-        return (
-            <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                <TaskForm
-                    formTitle={this.state.formTitle}
-                    handleCloseForm={this.handleCloseForm}
-                    addNewTask={ahihi => this.addNewTask(ahihi)}
-                    taskSelected={this.state.taskSelected}
-                    updateTask={this.updateTask}
-                />
-            </div>
-        )
+    handleSearch = keyWord => {
+        this.setState({ searchKeyWord: keyWord})
+    }
+
+    /**
+     * Handle sort tasks
+     *
+     * @param {*} sortType
+     * @memberof App
+     */
+    handleSort = sortType => {
+        this.setState({ sortType: sortType });
+    }
+
+    /**
+     * Hmm, It's the last function In write-in this project
+     * I think I should eat something because I'm really really hungry now
+     * One thing, If you read my code and you feel this like the garbage! Ok, take it and make it awesome more than my code!
+     * Thank you!
+     * Warning: don't trust this code
+     *
+     * @param {*} tasks
+     * @returns {array} tasksSorted
+     * 
+     * @memberof App
+     */
+    sort(tasks) {
+        let tasksSorted = null;
+        switch (this.state.sortType) {
+            case 1: tasksSorted = tasks.sort((prevItem, nextItem) => {
+                        let fist = prevItem.name.toLowerCase();
+                        let second = nextItem.name.toLowerCase();
+                        
+                        if (fist < second) { return -1; }    
+                        if (fist > second) { return 1; }
+                
+                        return 0;
+                    })
+                    break;
+
+            case 2: tasksSorted = tasks.sort((prevItem, nextItem) => {
+                        let fist = prevItem.name.toLowerCase();
+                        let second = nextItem.name.toLowerCase();
+                        
+                        if (fist > second) { return -1; }    
+                        if (fist < second) { return 1; }
+                
+                        return 0;
+                    })
+                    break;
+            case 3: tasksSorted = tasks.sort((prevItem, nextItem) => {
+                        let fist = prevItem.status;
+                        let second = nextItem.status;
+
+                        if (fist > second) { return -1; }    
+                        if (fist < second) { return 1; }
+                
+                        return 0;
+                    })
+                    break;
+
+            case 4: tasksSorted = tasks.sort((prevItem, nextItem) => {
+                        let fist = prevItem.status;
+                        let second = nextItem.status;
+
+                        if (fist < second) { return -1; }    
+                        if (fist > second) { return 1; }
+                
+                        return 0;
+                    })
+                break;
+
+                default: tasksSorted = tasks; break;
+        }
+
+        return tasksSorted;
     }
 
     /**
@@ -195,7 +261,37 @@ class App extends Component {
             tasksFiltered = tasksFiltered.filter(item => !item.status);
         }
 
+        if (this.state.searchKeyWord) {
+            tasksFiltered = tasksFiltered.filter(item => {
+                return item.name.toLowerCase().indexOf(this.state.searchKeyWord) !== -1;
+            });
+        }
+
+        if (this.state.sortType) {
+            tasksFiltered = this.sort(tasksFiltered);
+        }
+        
+
         return tasksFiltered;
+    }
+
+    /**
+     * Render form element with condition
+     *
+     * @memberof App
+     */
+    getFormElement = () => {
+        return (
+            <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <TaskForm
+                    formTitle={this.state.formTitle}
+                    handleCloseForm={this.handleCloseForm}
+                    addNewTask={ahihi => this.addNewTask(ahihi)}
+                    taskSelected={this.state.taskSelected}
+                    updateTask={this.updateTask}
+                />
+            </div>
+        )
     }
 
     /**
@@ -217,12 +313,17 @@ class App extends Component {
                         <hr />
                     </div>
                     <div className="row">
+
                         {formElm}
+                    
                         <div className={isDisplayForm ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8' : 'col-xs-12 col-sm-12 col-md-12 col-lg-12'} >
                             <button type="button" className="btn btn-primary" onClick={this.handleToggleForm}>
                                 <span className="fa fa-plus mr-5"></span>Thêm công việc
                             </button>
-                            <Control />
+                            <Control
+                                handleSearch={this.handleSearch}
+                                handleSort={this.handleSort}
+                            />
                             <TaskList
                                 tasks={tasks}
                                 changeStatus={this.changeStatus}
