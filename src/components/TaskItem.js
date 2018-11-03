@@ -7,8 +7,8 @@ class TaskItem extends Component {
      * 
      * @memberof TaskList
      */
-    changeStatus = (idx) => {
-        this.props.changeStatus(idx);
+    changeStatus = (task) => {
+        this.props.changeStatus(task);
     }
 
     /**
@@ -16,8 +16,8 @@ class TaskItem extends Component {
      *
      * @memberof TaskList
      */
-    deleteTask = idx => {
-        this.props.deleteTask(idx);
+    deleteTask = task => {
+        this.props.deleteTask(task);
     }
 
     /**
@@ -39,7 +39,7 @@ class TaskItem extends Component {
                 <td className="text-center">
                     <span
                         className={ taskValue.status ? 'label label-info' : 'label label-success' }
-                        onClick={() => this.changeStatus(idx)}
+                        onClick={() => this.changeStatus(taskValue)}
                         style={{cursor: 'pointer'}}
                     >
                         { taskValue.status ? 'Hoạt động' : 'Hoàn thành' }
@@ -49,7 +49,7 @@ class TaskItem extends Component {
                     <button type="button" className="btn btn-warning btn-sm" onClick={() => this.editTask(taskValue)} >
                         <span className="fa fa-edit mr-5"></span>
                     </button>&nbsp;
-                    <button type="button" className="btn btn-danger btn-sm" onClick={() => this.deleteTask(idx)} >
+                    <button type="button" className="btn btn-danger btn-sm" onClick={() => this.deleteTask(taskValue)} >
                         <span className="fa fa-trash mr-5"></span>
                     </button>
                 </td>

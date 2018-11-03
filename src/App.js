@@ -72,9 +72,12 @@ class App extends Component {
      *
      * @memberof App
      */
-    changeStatus = idx => {
+    changeStatus = task => {
         let listTask = this.state.tasks;
+        let idx = listTask.indexOf(task);
+
         listTask[idx].status = !listTask[idx].status;
+
         this.setState({
             tasks: listTask
         });
@@ -85,8 +88,9 @@ class App extends Component {
      *
      * @memberof App
      */
-    deleteTask = idx => {
+    deleteTask = task => {
         let listTask = this.state.tasks;
+        let idx = listTask.indexOf(task);
 
         listTask.splice(idx, 1);
 

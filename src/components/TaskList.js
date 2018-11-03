@@ -38,8 +38,8 @@ class TaskList extends Component {
      * 
      * @memberof App
      */
-    changeStatus = idx => {
-        this.props.changeStatus(idx);
+    changeStatus = task => {
+        this.props.changeStatus(task);
     }
 
     /**
@@ -47,8 +47,8 @@ class TaskList extends Component {
      * 
      * @memberof App
      */
-    deleteTask = idx => {
-        this.props.deleteTask(idx);
+    deleteTask = task => {
+        this.props.deleteTask(task);
     }
 
     /**
