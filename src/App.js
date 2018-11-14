@@ -169,7 +169,7 @@ class App extends Component {
     }
 
     /**
-     * Hmm, It's the last function In write-in this project
+     * Hmm, It's the last function I write in this project
      * I think I should eat something because I'm really really hungry now
      * One thing, If you read my code and you feel this like the garbage! Ok, take it and make it awesome more than my code!
      * Thank you!
